@@ -1,0 +1,101 @@
+@model TaskManagerMVC.Models.ViewModels.TaskSearchViewModel
+@{
+    ViewData["Title"] = "Búsqueda";
+}
+
+<h4>Búsqueda Avanzada</h4>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get">
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <label asp-for="Text" class="form-label">Texto:</label>
+                    <input asp-for="Text" class="form-control" placeholder="Buscar..." />
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <label asp-for="Status" class="form-label">Estado:</label>
+                    <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<TaskManagerMVC.Models.Enums.TaskItemStatus>()">
+                        <option value="">Todos</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <label asp-for="Priority" class="form-label">Prioridad:</label>
+                    <select asp-for="Priority" class="form-select" asp-items="Html.GetEnumSelectList<TaskManagerMVC.Models.Enums.Priority>()">
+                        <option value="">Todas</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <label asp-for="ProjectId" class="form-label">Proyecto:</label>
+                    <select asp-for="ProjectId" class="form-select" asp-items="Model.Projects">
+                        <option value="">Todos</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+    </div>
+</div>
+
+@if (Model.Results.Any())
+{
+    <h5>Resultados (@Model.Results.Count encontrados)</h5>
+    
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Estado</th>
+                <th>Prioridad</th>
+                <th>Proyecto</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in Model.Results)
+            {
+                <tr>
+                    <td>@task.Id</td>
+                    <td>@task.Title</td>
+                    <td>
+                        @switch (task.Status)
+                        {
+                            case TaskManagerMVC.Models.Enums.TaskItemStatus.Pending:
+                                <span class="badge bg-warning">Pendiente</span>
+                                break;
+                            case TaskManagerMVC.Models.Enums.TaskItemStatus.InProgress:
+                                <span class="badge bg-info">En Progreso</span>
+                                break;
+                            case TaskManagerMVC.Models.Enums.TaskItemStatus.Completed:
+                                <span class="badge bg-success">Completada</span>
+                                break;
+                        }
+                    </td>
+                    <td>
+                        @switch (task.Priority)
+                        {
+                            case TaskManagerMVC.Models.Enums.Priority.Low:
+                                <span class="badge bg-secondary">Baja</span>
+                                break;
+                            case TaskManagerMVC.Models.Enums.Priority.Medium:
+                                <span class="badge bg-primary">Media</span>
+                                break;
+                            case TaskManagerMVC.Models.Enums.Priority.High:
+                                <span class="badge bg-danger">Alta</span>
+                                break;
+                        }
+                    </td>
+                    <td>@task.Project?.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (Context.Request.Query.Count > 0)
+{
+    <div class="alert alert-info">No se encontraron resultados.</div>
+}

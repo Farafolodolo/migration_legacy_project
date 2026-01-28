@@ -1,0 +1,77 @@
+@model TaskManagerMVC.Models.ViewModels.TaskListViewModel
+@{
+    ViewData["Title"] = "Tareas";
+}
+
+<h4>Gestión de Tareas</h4>
+
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-primary">Nueva Tarea</a>
+</div>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Estado</th>
+            <th>Prioridad</th>
+            <th>Proyecto</th>
+            <th>Asignado</th>
+            <th>Vencimiento</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Model.Tasks)
+        {
+            <tr>
+                <td>@task.Id</td>
+                <td>@task.Title</td>
+                <td>
+                    @switch (task.Status)
+                    {
+                        case TaskManagerMVC.Models.Enums.TaskItemStatus.Pending:
+                            <span class="badge bg-warning">Pendiente</span>
+                            break;
+                        case TaskManagerMVC.Models.Enums.TaskItemStatus.InProgress:
+                            <span class="badge bg-info">En Progreso</span>
+                            break;
+                        case TaskManagerMVC.Models.Enums.TaskItemStatus.Completed:
+                            <span class="badge bg-success">Completada</span>
+                            break;
+                    }
+                </td>
+                <td>
+                    @switch (task.Priority)
+                    {
+                        case TaskManagerMVC.Models.Enums.Priority.Low:
+                            <span class="badge bg-secondary">Baja</span>
+                            break;
+                        case TaskManagerMVC.Models.Enums.Priority.Medium:
+                            <span class="badge bg-primary">Media</span>
+                            break;
+                        case TaskManagerMVC.Models.Enums.Priority.High:
+                            <span class="badge bg-danger">Alta</span>
+                            break;
+                    }
+                </td>
+                <td>@task.Project?.Name</td>
+                <td>@(task.AssignedToUser?.Username ?? "Sin asignar")</td>
+                <td>@task.DueDate?.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-warning">Editar</a>
+                    <form asp-action="Delete" asp-route-id="@task.Id" method="post" class="d-inline" 
+                          onsubmit="return confirm('¿Estás seguro de eliminar esta tarea?');">
+                        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!Model.Tasks.Any())
+{
+    <div class="alert alert-info">No hay tareas registradas.</div>
+}

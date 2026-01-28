@@ -1,0 +1,69 @@
+@model TaskManagerMVC.Models.ViewModels.TaskCreateViewModel
+@{
+    ViewData["Title"] = "Nueva Tarea";
+}
+
+<h4>Nueva Tarea</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label">Título:</label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Descripción:</label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Status" class="form-label">Estado:</label>
+                    <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<TaskManagerMVC.Models.Enums.TaskItemStatus>()"></select>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Priority" class="form-label">Prioridad:</label>
+                    <select asp-for="Priority" class="form-select" asp-items="Html.GetEnumSelectList<TaskManagerMVC.Models.Enums.Priority>()"></select>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="ProjectId" class="form-label">Proyecto:</label>
+                <select asp-for="ProjectId" class="form-select" asp-items="Model.Projects">
+                    <option value="">-- Seleccionar --</option>
+                </select>
+                <span asp-validation-for="ProjectId" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="AssignedToUserId" class="form-label">Asignado a:</label>
+                <select asp-for="AssignedToUserId" class="form-select" asp-items="Model.Users">
+                    <option value="">Sin asignar</option>
+                </select>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="DueDate" class="form-label">Fecha Vencimiento:</label>
+                    <input asp-for="DueDate" type="date" class="form-control" />
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label asp-for="EstimatedHours" class="form-label">Horas Estimadas:</label>
+                    <input asp-for="EstimatedHours" type="number" step="0.5" class="form-control" />
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>

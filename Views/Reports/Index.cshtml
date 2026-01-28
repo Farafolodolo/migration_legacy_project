@@ -1,0 +1,108 @@
+@model TaskManagerMVC.Models.ViewModels.ReportsViewModel
+@{
+    ViewData["Title"] = "Reportes";
+}
+
+<h4>Generación de Reportes</h4>
+
+<div class="mb-4">
+    <form asp-action="GenerateTaskReport" method="post" class="d-inline">
+        <button type="submit" class="btn btn-outline-primary">Reporte de Tareas</button>
+    </form>
+    <form asp-action="GenerateProjectReport" method="post" class="d-inline">
+        <button type="submit" class="btn btn-outline-primary">Reporte de Proyectos</button>
+    </form>
+    <form asp-action="GenerateUserReport" method="post" class="d-inline">
+        <button type="submit" class="btn btn-outline-primary">Reporte de Usuarios</button>
+    </form>
+    <form asp-action="ExportCsv" method="post" class="d-inline">
+        <button type="submit" class="btn btn-outline-success">Exportar a CSV</button>
+    </form>
+</div>
+
+@if (Model.ReportType == "tasks" && Model.TaskReport != null)
+{
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <strong>Reporte de Tareas</strong>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tr>
+                    <td><strong>Total de Tareas:</strong></td>
+                    <td>@Model.TaskReport.TotalTasks</td>
+                </tr>
+                <tr>
+                    <td><strong>Pendientes:</strong></td>
+                    <td><span class="badge bg-warning">@Model.TaskReport.PendingTasks</span></td>
+                </tr>
+                <tr>
+                    <td><strong>En Progreso:</strong></td>
+                    <td><span class="badge bg-info">@Model.TaskReport.InProgressTasks</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Completadas:</strong></td>
+                    <td><span class="badge bg-success">@Model.TaskReport.CompletedTasks</span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}
+
+@if (Model.ReportType == "projects" && Model.ProjectReport != null)
+{
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <strong>Reporte de Proyectos</strong>
+        </div>
+        <div class="card-body">
+            <p><strong>Total de Proyectos:</strong> @Model.ProjectReport.TotalProjects</p>
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Proyecto</th>
+                        <th>Cantidad de Tareas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var project in Model.ProjectReport.ProjectsWithTaskCount)
+                    {
+                        <tr>
+                            <td>@project.ProjectName</td>
+                            <td>@project.TaskCount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@if (Model.ReportType == "users" && Model.UserReport != null)
+{
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <strong>Reporte de Usuarios</strong>
+        </div>
+        <div class="card-body">
+            <p><strong>Total de Usuarios:</strong> @Model.UserReport.TotalUsers</p>
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Tareas Asignadas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.UserReport.UsersWithTaskCount)
+                    {
+                        <tr>
+                            <td>@user.Username</td>
+                            <td>@user.AssignedTaskCount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

@@ -1,0 +1,62 @@
+@model List<TaskManagerMVC.Models.Comment>
+@{
+    ViewData["Title"] = "Comentarios";
+}
+
+<h4>Comentarios de Tareas</h4>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <form method="get" class="d-flex gap-2">
+            <select name="taskId" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Seleccionar Tarea --</option>
+                @foreach (SelectListItem item in ViewBag.Tasks)
+                {
+                    <option value="@item.Value" selected="@(item.Value == ViewBag.SelectedTaskId?.ToString())">@item.Text</option>
+                }
+            </select>
+        </form>
+    </div>
+</div>
+
+@if (ViewBag.SelectedTaskId != null)
+{
+    <div class="card mb-4">
+        <div class="card-header">
+            <strong>Agregar Comentario a: @ViewBag.TaskTitle</strong>
+        </div>
+        <div class="card-body">
+            <form asp-action="Add" method="post">
+                <input type="hidden" name="taskId" value="@ViewBag.SelectedTaskId" />
+                <div class="mb-3">
+                    <textarea name="content" class="form-control" rows="3" placeholder="Escribe tu comentario..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Agregar Comentario</button>
+            </form>
+        </div>
+    </div>
+
+    <h5>Comentarios</h5>
+    @if (Model.Any())
+    {
+        @foreach (var comment in Model)
+        {
+            <div class="card mb-2">
+                <div class="card-body">
+                    <p class="mb-1">@comment.Content</p>
+                    <small class="text-muted">
+                        Por <strong>@comment.User?.Username</strong> el @comment.CreatedAt.ToString("yyyy-MM-dd HH:mm")
+                    </small>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info">No hay comentarios para esta tarea.</div>
+    }
+}
+else
+{
+    <div class="alert alert-info">Selecciona una tarea para ver sus comentarios.</div>
+}

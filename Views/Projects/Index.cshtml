@@ -1,0 +1,43 @@
+@model List<TaskManagerMVC.Models.Project>
+@{
+    ViewData["Title"] = "Proyectos";
+}
+
+<h4>Gestión de Proyectos</h4>
+
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-primary">Nuevo Proyecto</a>
+</div>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var project in Model)
+        {
+            <tr>
+                <td>@project.Id</td>
+                <td>@project.Name</td>
+                <td>@project.Description</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@project.Id" class="btn btn-sm btn-warning">Editar</a>
+                    <form asp-action="Delete" asp-route-id="@project.Id" method="post" class="d-inline"
+                          onsubmit="return confirm('¿Estás seguro de eliminar este proyecto?');">
+                        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No hay proyectos registrados.</div>
+}

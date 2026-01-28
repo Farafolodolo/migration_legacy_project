@@ -1,0 +1,84 @@
+@model List<TaskManagerMVC.Models.TaskHistory>
+@{
+    ViewData["Title"] = "Historial";
+}
+
+<h4>Historial de Cambios</h4>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <form method="get" class="d-flex gap-2">
+            <select name="taskId" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Todas las Tareas --</option>
+                @foreach (SelectListItem item in ViewBag.Tasks)
+                {
+                    <option value="@item.Value" selected="@(item.Value == ViewBag.SelectedTaskId?.ToString())">@item.Text</option>
+                }
+            </select>
+        </form>
+    </div>
+</div>
+
+@if (ViewBag.SelectedTaskId != null)
+{
+    <h5>Historial de: @ViewBag.TaskTitle</h5>
+}
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Fecha</th>
+            <th>Acción</th>
+            <th>Usuario</th>
+            <th>Valor Anterior</th>
+            <th>Valor Nuevo</th>
+            @if (ViewBag.SelectedTaskId == null)
+            {
+                <th>Tarea</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var history in Model)
+        {
+            <tr>
+                <td>@history.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                <td>
+                    @switch (history.ActionType)
+                    {
+                        case TaskManagerMVC.Models.Enums.HistoryActionType.Created:
+                            <span class="badge bg-success">Creada</span>
+                            break;
+                        case TaskManagerMVC.Models.Enums.HistoryActionType.TitleChanged:
+                            <span class="badge bg-info">Título cambiado</span>
+                            break;
+                        case TaskManagerMVC.Models.Enums.HistoryActionType.StatusChanged:
+                            <span class="badge bg-warning">Estado cambiado</span>
+                            break;
+                        case TaskManagerMVC.Models.Enums.HistoryActionType.PriorityChanged:
+                            <span class="badge bg-primary">Prioridad cambiada</span>
+                            break;
+                        case TaskManagerMVC.Models.Enums.HistoryActionType.Deleted:
+                            <span class="badge bg-danger">Eliminada</span>
+                            break;
+                        default:
+                            <span class="badge bg-secondary">@history.ActionType</span>
+                            break;
+                    }
+                </td>
+                <td>@history.User?.Username</td>
+                <td>@(history.OldValue ?? "(vacío)")</td>
+                <td>@(history.NewValue ?? "(vacío)")</td>
+                @if (ViewBag.SelectedTaskId == null)
+                {
+                    <td>@history.TaskItem?.Title</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No hay historial disponible.</div>
+}
