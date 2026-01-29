@@ -8,20 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Database
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-// En Railway, usar DATABASE_URL si está disponible
-if (string.IsNullOrEmpty(connectionString))
-{
-    var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-    if (!string.IsNullOrEmpty(databaseUrl))
-    {
-        connectionString = databaseUrl;
-    }
-}
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Session for authentication
 builder.Services.AddDistributedMemoryCache();
