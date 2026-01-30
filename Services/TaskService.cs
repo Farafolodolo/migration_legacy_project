@@ -50,7 +50,11 @@ public class TaskService : ITaskService
     {
         task.CreatedByUserId = userId;
         task.CreatedAt = DateTime.UtcNow;
-        task.DueDate = task.DueDate.Value.ToUniversalTime();
+        if (task.DueDate.HasValue)
+        {
+            task.DueDate = task.DueDate.Value.ToUniversalTime();
+        }
+
 
         var storedTask = await _context.TaskItems.AddAsync(task);
         await _context.SaveChangesAsync();
@@ -58,7 +62,10 @@ public class TaskService : ITaskService
         await _historyService.RecordHistoryAsync(task.Id, userId, HistoryActionType.Created, null, task.Title);
         var user = await _context.Users.FindAsync(userId);
 
-        await _notificationService.CreateNotificationAsync(userId, $"Tarea {task.Title} creada exitosamente por {user.Username}", storedTask.Entity.Id);
+        if (task.AssignedToUserId.HasValue && user != null)
+        {
+            await _notificationService.CreateNotificationAsync(task.AssignedToUserId.Value, $"Se te ha asignado la tarea {task.Title} creada exitosamente por {user.Username}", storedTask.Entity.Id);
+        }
         return task;
     }
 
@@ -85,11 +92,18 @@ public class TaskService : ITaskService
         existingTask.Description = updatedTask.Description;
         existingTask.Status = updatedTask.Status;
         existingTask.Priority = updatedTask.Priority;
-        existingTask.DueDate = updatedTask.DueDate.Value.ToUniversalTime();
+
+        if (updatedTask.DueDate.HasValue)
+        {
+            existingTask.DueDate = updatedTask.DueDate.Value.ToUniversalTime();
+        }
+
         existingTask.EstimatedHours = updatedTask.EstimatedHours;
         existingTask.ProjectId = updatedTask.ProjectId;
         existingTask.AssignedToUserId = updatedTask.AssignedToUserId;
         existingTask.UpdatedAt = DateTime.UtcNow;
+
+
 
         await _context.SaveChangesAsync();
         return existingTask;
