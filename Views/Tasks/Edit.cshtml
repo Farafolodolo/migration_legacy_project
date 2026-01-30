@@ -3,69 +3,99 @@
     ViewData["Title"] = "Editar Tarea";
 }
 
-<h4>Editar Tarea</h4>
-<hr />
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-white p-4 border-bottom border-light">
+                    <div class="d-flex align-items-center justify-content-between">
+                         <div>
+                            <h4 class="mb-1 fw-bold font-poppins text-dark">Editar Tarea</h4>
+                            <p class="mb-0 text-muted small">ID: #@Model.Id</p>
+                         </div>
+                         <div class="bg-light p-2 rounded-circle text-primary">
+                             <i class="bi bi-pencil-square fs-4"></i>
+                         </div>
+                    </div>
+                </div>
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <form asp-action="Edit" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        
+                        <!-- Title & Description -->
+                        <div class="mb-4">
+                            <label asp-for="Title" class="form-label fw-semibold text-secondary small text-uppercase">Título de la Tarea</label>
+                            <input asp-for="Title" class="form-control form-control-lg bg-light border-0" />
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label asp-for="Description" class="form-label fw-semibold text-secondary small text-uppercase">Descripción</label>
+                            <textarea asp-for="Description" class="form-control bg-light border-0" rows="4"></textarea>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
 
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Edit" method="post">
-            <input type="hidden" asp-for="Id" />
-            
-            <div class="mb-3">
-                <label asp-for="Title" class="form-label">Título:</label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            
-            <div class="mb-3">
-                <label asp-for="Description" class="form-label">Descripción:</label>
-                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Status" class="form-label">Estado:</label>
-                    <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<TaskManagerMVC.Models.Enums.TaskItemStatus>()"></select>
+                        <!-- Grid -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="ProjectId" class="form-label fw-semibold text-secondary small text-uppercase">Proyecto</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0 text-muted"><i class="bi bi-folder"></i></span>
+                                    <select asp-for="ProjectId" class="form-select bg-light border-0" asp-items="Model.Projects">
+                                        <option value="">-- Seleccionar --</option>
+                                    </select>
+                                </div>
+                                <span asp-validation-for="ProjectId" class="text-danger small"></span>
+                            </div>
+                             <div class="col-md-6">
+                                <label asp-for="AssignedToUserId" class="form-label fw-semibold text-secondary small text-uppercase">Asignado a</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0 text-muted"><i class="bi bi-person"></i></span>
+                                    <select asp-for="AssignedToUserId" class="form-select bg-light border-0" asp-items="Model.Users">
+                                        <option value="">Sin asignar</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="Status" class="form-label fw-semibold text-secondary small text-uppercase">Estado</label>
+                                <select asp-for="Status" class="form-select bg-light border-0" asp-items="Html.GetEnumSelectList<TaskManagerMVC.Models.Enums.TaskItemStatus>()"></select>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Priority" class="form-label fw-semibold text-secondary small text-uppercase">Prioridad</label>
+                                <select asp-for="Priority" class="form-select bg-light border-0" asp-items="Html.GetEnumSelectList<TaskManagerMVC.Models.Enums.Priority>()"></select>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mb-5">
+                            <div class="col-md-6">
+                                <label asp-for="DueDate" class="form-label fw-semibold text-secondary small text-uppercase">Fecha Vencimiento</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0 text-muted"><i class="bi bi-calendar-event"></i></span>
+                                    <input asp-for="DueDate" type="date" class="form-control bg-light border-0" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="EstimatedHours" class="form-label fw-semibold text-secondary small text-uppercase">Horas Estimadas</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0 text-muted"><i class="bi bi-clock"></i></span>
+                                    <input asp-for="EstimatedHours" type="number" step="0.5" class="form-control bg-light border-0" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="d-flex justify-content-end gap-3 pt-3 border-top">
+                            <a asp-action="Index" class="btn btn-light px-4 text-muted fw-semibold">Cancelar</a>
+                            <button type="submit" class="btn btn-primary px-5 fw-bold shadow-primary">
+                                <i class="bi bi-save me-2"></i>Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Priority" class="form-label">Prioridad:</label>
-                    <select asp-for="Priority" class="form-select" asp-items="Html.GetEnumSelectList<TaskManagerMVC.Models.Enums.Priority>()"></select>
-                </div>
             </div>
-            
-            <div class="mb-3">
-                <label asp-for="ProjectId" class="form-label">Proyecto:</label>
-                <select asp-for="ProjectId" class="form-select" asp-items="Model.Projects">
-                    <option value="">-- Seleccionar --</option>
-                </select>
-                <span asp-validation-for="ProjectId" class="text-danger"></span>
-            </div>
-            
-            <div class="mb-3">
-                <label asp-for="AssignedToUserId" class="form-label">Asignado a:</label>
-                <select asp-for="AssignedToUserId" class="form-select" asp-items="Model.Users">
-                    <option value="">Sin asignar</option>
-                </select>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label asp-for="DueDate" class="form-label">Fecha Vencimiento:</label>
-                    <input asp-for="DueDate" type="date" class="form-control" />
-                </div>
-                
-                <div class="col-md-6 mb-3">
-                    <label asp-for="EstimatedHours" class="form-label">Horas Estimadas:</label>
-                    <input asp-for="EstimatedHours" type="number" step="0.5" class="form-control" />
-                </div>
-            </div>
-            
-            <div class="mb-3">
-                <button type="submit" class="btn btn-primary">Actualizar</button>
-                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
