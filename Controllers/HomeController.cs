@@ -57,8 +57,8 @@ public class HomeController : Controller
             RecentActivity = recentActivity
         };
 
-        // User requested explicitly to set this to "Usuario"
-        ViewBag.CurrentUsername = "Usuario";
+        // Retrieve username from session
+        ViewBag.CurrentUsername = HttpContext.Session.GetString("Username");
 
         return View(viewModel);
     }
