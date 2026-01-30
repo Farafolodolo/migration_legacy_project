@@ -1,8 +1,10 @@
 :root {
-  --primary-color: #6366f1; /* Indigo */
+  --primary-color: #6366f1;
+  /* Indigo */
   --primary-hover: #4f46e5;
   --secondary-color: #64748b;
-  --bg-body: #f8fafc; /* Very light gray */
+  --bg-body: #f8fafc;
+  /* Very light gray */
   --text-main: #1e293b;
   --text-muted: #64748b;
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
@@ -13,7 +15,8 @@
   --shadow-primary: 0 4px 14px 0 rgba(99, 102, 241, 0.39);
 }
 
-html, body {
+html,
+body {
   height: 100%;
   font-family: var(--font-main);
   background-color: var(--bg-body);
@@ -22,7 +25,13 @@ html, body {
 }
 
 /* Typography */
-h1, h2, h3, h4, h5, h6, .font-poppins {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-poppins {
   font-family: var(--font-display);
   font-weight: 600;
   color: var(--text-main);
@@ -40,32 +49,37 @@ a:hover {
 
 /* Navbar overrides */
 .navbar-dark {
-    background-color: #1e1b4b !important; /* Darker indigo/slate */
-    background: linear-gradient(to right, #1e1b4b, #312e81);
+  background-color: #1e1b4b !important;
+  /* Darker indigo/slate */
+  background: linear-gradient(to right, #1e1b4b, #312e81);
+}
+
+.navbar-dark .navbar-brand {
+  color: white !important;
 }
 
 /* Navigation Tabs */
 .nav-tabs .nav-link {
-    color: var(--text-muted);
-    border: none;
-    border-bottom: 2px solid transparent;
-    padding: 1rem 1.5rem;
-    font-weight: 500;
-    transition: all 0.2s;
+  color: var(--text-muted);
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 1rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.2s;
 }
 
 .nav-tabs .nav-link:hover {
-    color: var(--primary-color);
-    border-color: transparent;
-    background-color: transparent;
+  color: var(--primary-color);
+  border-color: transparent;
+  background-color: transparent;
 }
 
 .nav-tabs .nav-link.active {
-    color: var(--primary-color);
-    border: none;
-    border-bottom: 2px solid var(--primary-color);
-    font-weight: 600;
-    background: transparent;
+  color: var(--primary-color);
+  border: none;
+  border-bottom: 2px solid var(--primary-color);
+  font-weight: 600;
+  background: transparent;
 }
 
 /* Buttons */
@@ -84,7 +98,8 @@ a:hover {
   box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
 }
 
-.btn-primary:hover, .btn-primary:focus {
+.btn-primary:hover,
+.btn-primary:focus {
   background-color: var(--primary-hover);
   border-color: var(--primary-hover);
   transform: translateY(-1px);
@@ -107,78 +122,82 @@ a:hover {
 }
 
 .btn-danger {
-    background-color: #ef4444;
-    border-color: #ef4444;
+  background-color: #ef4444;
+  border-color: #ef4444;
 }
 
 .btn-outline-primary {
-    color: var(--primary-color);
-    border-color: var(--primary-color);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 .btn-outline-primary:hover {
-    background-color: var(--primary-color);
-    color: white;
-    box-shadow: var(--shadow-primary);
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: var(--shadow-primary);
 }
 
 /* Cards & Containers */
 .card {
-    border: 1px solid rgba(0,0,0,0.05);
-    border-radius: 12px;
-    box-shadow: var(--shadow-sm);
-    background: white;
-    transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  background: white;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.card:hover { 
-    /* Optional: subtle lift for cards */
+.card:hover {
+  /* Optional: subtle lift for cards */
 }
 
 /* Animations */
 .fade-in-up {
-    animation: fadeInUp 0.5s ease-out;
+  animation: fadeInUp 0.5s ease-out;
 }
 
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translate3d(0, 20px, 0);
-    }
-    to {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-    }
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 /* Footer */
 footer {
-    opacity: 0.7;
-    font-size: 0.875rem;
+  opacity: 0.7;
+  font-size: 0.875rem;
 }
 
 /* Forms */
-.form-control, .form-select {
-    border-radius: var(--border-radius-base);
-    border: 1px solid #e2e8f0;
-    padding: 0.6rem 1rem;
+.form-control,
+.form-select {
+  border-radius: var(--border-radius-base);
+  border: 1px solid #e2e8f0;
+  padding: 0.6rem 1rem;
 }
 
-.form-control:focus, .form-select:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
 /* Bootstrap Overrides */
 .table {
-    --bs-table-bg: transparent;
+  --bs-table-bg: transparent;
 }
+
 .table thead th {
-    font-weight: 600;
-    color: var(--text-muted);
-    border-bottom-width: 1px;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    background-color: #f8fafc;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-bottom-width: 1px;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  background-color: #f8fafc;
 }
