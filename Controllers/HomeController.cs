@@ -12,6 +12,9 @@ public class HomeController : Controller
     private readonly ITaskService _taskService;
     private readonly IProjectService _projectService;
 
+    protected int CurrentUserId => HttpContext.Session.GetInt32("UserId") ?? 0;
+    protected string CurrentUsername => HttpContext.Session.GetString("Username") ?? "";
+
     public HomeController(ITaskService taskService, IProjectService projectService)
     {
         _taskService = taskService;
@@ -36,9 +39,9 @@ public class HomeController : Controller
 
         // "Completadas Hoy"
         var today = DateTime.UtcNow.Date;
-        var completedTodayCount = allTasks.Count(t => 
-            t.Status == TaskItemStatus.Completed && 
-            t.UpdatedAt.HasValue && 
+        var completedTodayCount = allTasks.Count(t =>
+            t.Status == TaskItemStatus.Completed &&
+            t.UpdatedAt.HasValue &&
             t.UpdatedAt.Value.Date == today);
 
         // Recent Activity
@@ -58,7 +61,7 @@ public class HomeController : Controller
         };
 
         // Retrieve username from session
-        ViewBag.CurrentUsername = HttpContext.Session.GetString("Username");
+        ViewBag.CurrentUsername = CurrentUsername;
 
         return View(viewModel);
     }

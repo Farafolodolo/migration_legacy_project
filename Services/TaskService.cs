@@ -19,11 +19,13 @@ public class TaskService : ITaskService
 {
     private readonly ApplicationDbContext _context;
     private readonly IHistoryService _historyService;
+    private readonly INotificationService _notificationService;
 
-    public TaskService(ApplicationDbContext context, IHistoryService historyService)
+    public TaskService(ApplicationDbContext context, IHistoryService historyService, INotificationService notificationService)
     {
         _context = context;
         _historyService = historyService;
+        _notificationService = notificationService;
     }
 
     public async Task<List<TaskItem>> GetAllTasksAsync()
@@ -50,11 +52,13 @@ public class TaskService : ITaskService
         task.CreatedAt = DateTime.UtcNow;
         task.DueDate = task.DueDate.Value.ToUniversalTime();
 
-        _context.TaskItems.Add(task);
+        var storedTask = await _context.TaskItems.AddAsync(task);
         await _context.SaveChangesAsync();
 
         await _historyService.RecordHistoryAsync(task.Id, userId, HistoryActionType.Created, null, task.Title);
+        var user = await _context.Users.FindAsync(userId);
 
+        await _notificationService.CreateNotificationAsync(userId, $"Tarea {task.Title} creada exitosamente por {user.Username}", storedTask.Entity.Id);
         return task;
     }
 
