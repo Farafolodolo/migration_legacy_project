@@ -23,92 +23,77 @@
 
 @if (Model.ReportType == "tasks" && Model.TaskReport != null)
 {
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <strong>Reporte de Tareas</strong>
+    <div class="card shadow-lg border-0">
+        <div class="card-header text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <h5 class="mb-0"><i class="bi bi-clipboard-check me-2"></i><strong>Reporte de Tareas</strong></h5>
         </div>
-        <div class="card-body">
-            <table class="table table-bordered">
-                <tr>
-                    <td><strong>Total de Tareas:</strong></td>
-                    <td>@Model.TaskReport.TotalTasks</td>
-                </tr>
-                <tr>
-                    <td><strong>Pendientes:</strong></td>
-                    <td><span class="badge bg-warning">@Model.TaskReport.PendingTasks</span></td>
-                </tr>
-                <tr>
-                    <td><strong>En Progreso:</strong></td>
-                    <td><span class="badge bg-info">@Model.TaskReport.InProgressTasks</span></td>
-                </tr>
-                <tr>
-                    <td><strong>Completadas:</strong></td>
-                    <td><span class="badge bg-success">@Model.TaskReport.CompletedTasks</span></td>
-                </tr>
-            </table>
+        <div class="card-body p-4">
+            <div class="row mb-4">
+                <div class="col-md-12 text-center mb-3">
+                    <h4 class="text-muted">Total de Tareas: <span class="badge bg-dark fs-5">@Model.TaskReport.TotalTasks</span></h4>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <div style="position: relative; height: 400px;">
+                        <canvas id="tasksChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 }
 
 @if (Model.ReportType == "projects" && Model.ProjectReport != null)
 {
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <strong>Reporte de Proyectos</strong>
+    <div class="card shadow-lg border-0">
+        <div class="card-header text-white" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <h5 class="mb-0"><i class="bi bi-folder me-2"></i><strong>Reporte de Proyectos</strong></h5>
         </div>
-        <div class="card-body">
-            <p><strong>Total de Proyectos:</strong> @Model.ProjectReport.TotalProjects</p>
-            <table class="table table-bordered table-striped">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Proyecto</th>
-                        <th>Cantidad de Tareas</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var project in Model.ProjectReport.ProjectsWithTaskCount)
-                    {
-                        <tr>
-                            <td>@project.ProjectName</td>
-                            <td>@project.TaskCount</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+        <div class="card-body p-4">
+            <div class="row mb-4">
+                <div class="col-md-12 text-center mb-3">
+                    <h4 class="text-muted">Total de Proyectos: <span class="badge bg-dark fs-5">@Model.ProjectReport.TotalProjects</span></h4>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <div style="position: relative; height: @(Math.Max(300, Model.ProjectReport.ProjectsWithTaskCount.Count * 80))px;">
+                        <canvas id="projectsChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 }
 
 @if (Model.ReportType == "users" && Model.UserReport != null)
 {
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <strong>Reporte de Usuarios</strong>
+    <div class="card shadow-lg border-0">
+        <div class="card-header text-white" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+            <h5 class="mb-0"><i class="bi bi-people me-2"></i><strong>Reporte de Usuarios</strong></h5>
         </div>
-        <div class="card-body">
-            <p><strong>Total de Usuarios:</strong> @Model.UserReport.TotalUsers</p>
-            <table class="table table-bordered table-striped">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Usuario</th>
-                        <th>Tareas Asignadas</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var user in Model.UserReport.UsersWithTaskCount)
-                    {
-                        <tr>
-                            <td>@user.Username</td>
-                            <td>@user.AssignedTaskCount</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+        <div class="card-body p-4">
+            <div class="row mb-4">
+                <div class="col-md-12 text-center mb-3">
+                    <h4 class="text-muted">Total de Usuarios: <span class="badge bg-dark fs-5">@Model.UserReport.TotalUsers</span></h4>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div style="position: relative; height: 400px;">
+                        <canvas id="usersChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 }
 
 @section Scripts {
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    
     <script>
         // Actualizar el tipo de reporte cuando se hace clic en cualquier botón de reporte
         document.addEventListener('DOMContentLoaded', function() {
@@ -123,6 +108,246 @@
                     }
                 });
             });
+
+            // Renderizar gráficos según el tipo de reporte
+            @if (Model.ReportType == "tasks" && Model.TaskReport != null)
+            {
+                <text>
+                // Gráfico de Tareas - Dona (Doughnut)
+                const tasksCtx = document.getElementById('tasksChart');
+                if (tasksCtx) {
+                    new Chart(tasksCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Pendientes', 'En Progreso', 'Completadas'],
+                            datasets: [{
+                                label: 'Cantidad de Tareas',
+                                data: [@Model.TaskReport.PendingTasks, @Model.TaskReport.InProgressTasks, @Model.TaskReport.CompletedTasks],
+                                backgroundColor: [
+                                    'rgba(255, 193, 7, 0.8)',  // Amarillo (Warning)
+                                    'rgba(13, 202, 240, 0.8)', // Cian (Info)
+                                    'rgba(25, 135, 84, 0.8)'   // Verde (Success)
+                                ],
+                                borderColor: [
+                                    'rgba(255, 193, 7, 1)',
+                                    'rgba(13, 202, 240, 1)',
+                                    'rgba(25, 135, 84, 1)'
+                                ],
+                                borderWidth: 2,
+                                hoverOffset: 15
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        padding: 20,
+                                        font: {
+                                            size: 14,
+                                            weight: 'bold'
+                                        }
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                    padding: 12,
+                                    titleFont: {
+                                        size: 14
+                                    },
+                                    bodyFont: {
+                                        size: 16
+                                    },
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.label || '';
+                                            if (label) {
+                                                label += ': ';
+                                            }
+                                            label += context.parsed;
+                                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                            const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                            label += ' (' + percentage + '%)';
+                                            return label;
+                                        }
+                                    }
+                                }
+                            },
+                            animation: {
+                                animateRotate: true,
+                                animateScale: true,
+                                duration: 1500,
+                                easing: 'easeInOutQuart'
+                            }
+                        }
+                    });
+                }
+                </text>
+            }
+
+            @if (Model.ReportType == "projects" && Model.ProjectReport != null)
+            {
+                <text>
+                // Gráfico de Proyectos - Barras Horizontales
+                const projectsCtx = document.getElementById('projectsChart');
+                if (projectsCtx) {
+                    new Chart(projectsCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: [@Html.Raw(string.Join(",", Model.ProjectReport.ProjectsWithTaskCount.Select(p => "\"" + p.ProjectName + "\"")))],
+                            datasets: [{
+                                label: 'Cantidad de Tareas',
+                                data: [@Html.Raw(string.Join(",", Model.ProjectReport.ProjectsWithTaskCount.Select(p => p.TaskCount)))],
+                                backgroundColor: [
+                                    'rgba(240, 147, 251, 0.8)',
+                                    'rgba(245, 87, 108, 0.8)',
+                                    'rgba(139, 69, 255, 0.8)',
+                                    'rgba(255, 107, 129, 0.8)',
+                                    'rgba(67, 97, 238, 0.8)',
+                                    'rgba(0, 201, 167, 0.8)'
+                                ],
+                                borderColor: [
+                                    'rgba(240, 147, 251, 1)',
+                                    'rgba(245, 87, 108, 1)',
+                                    'rgba(139, 69, 255, 1)',
+                                    'rgba(255, 107, 129, 1)',
+                                    'rgba(67, 97, 238, 1)',
+                                    'rgba(0, 201, 167, 1)'
+                                ],
+                                borderWidth: 2,
+                                borderRadius: 8,
+                                barThickness: 40
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                    padding: 12,
+                                    titleFont: {
+                                        size: 14
+                                    },
+                                    bodyFont: {
+                                        size: 16
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        font: {
+                                            size: 12,
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    grid: {
+                                        color: 'rgba(0, 0, 0, 0.05)'
+                                    }
+                                },
+                                y: {
+                                    ticks: {
+                                        font: {
+                                            size: 13,
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    grid: {
+                                        display: false
+                                    }
+                                }
+                            },
+                            animation: {
+                                duration: 1500,
+                                easing: 'easeInOutQuart'
+                            }
+                        }
+                    });
+                }
+                </text>
+            }
+
+            @if (Model.ReportType == "users" && Model.UserReport != null)
+            {
+                <text>
+                // Gráfico de Usuarios - Barras Verticales
+                const usersCtx = document.getElementById('usersChart');
+                if (usersCtx) {
+                    new Chart(usersCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: [@Html.Raw(string.Join(",", Model.UserReport.UsersWithTaskCount.Select(u => "\"" + u.Username + "\"")))],
+                            datasets: [{
+                                label: 'Tareas Asignadas',
+                                data: [@Html.Raw(string.Join(",", Model.UserReport.UsersWithTaskCount.Select(u => u.AssignedTaskCount)))],
+                                backgroundColor: 'rgba(79, 172, 254, 0.8)',
+                                borderColor: 'rgba(79, 172, 254, 1)',
+                                borderWidth: 2,
+                                borderRadius: 10,
+                                barThickness: 60
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                    padding: 12,
+                                    titleFont: {
+                                        size: 14
+                                    },
+                                    bodyFont: {
+                                        size: 16
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        font: {
+                                            size: 12,
+                                            weight: 'bold'
+                                        },
+                                        stepSize: 1
+                                    },
+                                    grid: {
+                                        color: 'rgba(0, 0, 0, 0.05)'
+                                    }
+                                },
+                                x: {
+                                    ticks: {
+                                        font: {
+                                            size: 13,
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    grid: {
+                                        display: false
+                                    }
+                                }
+                            },
+                            animation: {
+                                duration: 1500,
+                                easing: 'easeInOutQuart'
+                            }
+                        }
+                    });
+                }
+                </text>
+            }
         });
     </script>
 }
