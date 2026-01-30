@@ -14,9 +14,11 @@ public class ReportsController : BaseController
         _reportService = reportService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View(new ReportsViewModel());
+        // Cargar reporte de tareas por defecto
+        var report = await _reportService.GetTaskReportAsync();
+        return View(new ReportsViewModel { TaskReport = report, ReportType = "tasks" });
     }
 
     [HttpPost]
@@ -41,10 +43,29 @@ public class ReportsController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> ExportCsv()
+    public async Task<IActionResult> ExportCsv(string reportType)
     {
-        var csv = await _reportService.GenerateCsvReportAsync();
+        string csv;
+        string filename;
+
+        switch (reportType)
+        {
+            case "projects":
+                csv = await _reportService.GenerateProjectCsvAsync();
+                filename = "proyectos_export.csv";
+                break;
+            case "users":
+                csv = await _reportService.GenerateUserCsvAsync();
+                filename = "usuarios_export.csv";
+                break;
+            case "tasks":
+            default:
+                csv = await _reportService.GenerateCsvReportAsync();
+                filename = "tareas_export.csv";
+                break;
+        }
+
         var bytes = Encoding.UTF8.GetBytes(csv);
-        return File(bytes, "text/csv", "tareas_export.csv");
+        return File(bytes, "text/csv", filename);
     }
 }

@@ -55,7 +55,6 @@ public class TaskService : ITaskService
             task.DueDate = task.DueDate.Value.ToUniversalTime();
         }
 
-
         var storedTask = await _context.TaskItems.AddAsync(task);
         await _context.SaveChangesAsync();
 

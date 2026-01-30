@@ -6,16 +6,17 @@
 <h4>Generación de Reportes</h4>
 
 <div class="mb-4">
-    <form asp-action="GenerateTaskReport" method="post" class="d-inline">
+    <form asp-action="GenerateTaskReport" method="post" class="d-inline report-form" data-report-type="tasks">
         <button type="submit" class="btn btn-outline-primary">Reporte de Tareas</button>
     </form>
-    <form asp-action="GenerateProjectReport" method="post" class="d-inline">
+    <form asp-action="GenerateProjectReport" method="post" class="d-inline report-form" data-report-type="projects">
         <button type="submit" class="btn btn-outline-primary">Reporte de Proyectos</button>
     </form>
-    <form asp-action="GenerateUserReport" method="post" class="d-inline">
+    <form asp-action="GenerateUserReport" method="post" class="d-inline report-form" data-report-type="users">
         <button type="submit" class="btn btn-outline-primary">Reporte de Usuarios</button>
     </form>
-    <form asp-action="ExportCsv" method="post" class="d-inline">
+    <form asp-action="ExportCsv" method="post" class="d-inline" id="exportForm">
+        <input type="hidden" name="reportType" id="reportType" value="@Model.ReportType" />
         <button type="submit" class="btn btn-outline-success">Exportar a CSV</button>
     </form>
 </div>
@@ -105,4 +106,23 @@
             </table>
         </div>
     </div>
+}
+
+@section Scripts {
+    <script>
+        // Actualizar el tipo de reporte cuando se hace clic en cualquier botón de reporte
+        document.addEventListener('DOMContentLoaded', function() {
+            const reportForms = document.querySelectorAll('.report-form');
+            const reportTypeInput = document.getElementById('reportType');
+            
+            reportForms.forEach(function(form) {
+                form.addEventListener('submit', function(e) {
+                    const reportType = form.getAttribute('data-report-type');
+                    if (reportTypeInput) {
+                        reportTypeInput.value = reportType;
+                    }
+                });
+            });
+        });
+    </script>
 }

@@ -12,6 +12,8 @@ public interface IReportService
     Task<ProjectReportViewModel> GetProjectReportAsync();
     Task<UserReportViewModel> GetUserReportAsync();
     Task<string> GenerateCsvReportAsync();
+    Task<string> GenerateProjectCsvAsync();
+    Task<string> GenerateUserCsvAsync();
 }
 
 public class ReportService : IReportService
@@ -102,7 +104,43 @@ public class ReportService : IReportService
                 _ => task.Priority.ToString()
             };
 
-            sb.AppendLine($"{task.Id},\"{task.Title}\",{status},{priority},\"{task.Project?.Name}\",\"{task.AssignedToUser?.Username ?? "Sin asignar"}\",{task.DueDate?.ToString("yyyy-MM-dd") ?? ""},{ task.EstimatedHours?.ToString() ?? ""}");
+            sb.AppendLine($"{task.Id},\"{task.Title}\",{status},{priority},\"{task.Project?.Name}\",\"{task.AssignedToUser?.Username ?? "Sin asignar"}\",{task.DueDate?.ToString("yyyy-MM-dd") ?? ""},{task.EstimatedHours?.ToString() ?? ""}");
+        }
+
+        return sb.ToString();
+    }
+
+    public async Task<string> GenerateProjectCsvAsync()
+    {
+        var projects = await _context.Projects
+            .Where(p => p.IsActive)
+            .Include(p => p.Tasks)
+            .ToListAsync();
+
+        var sb = new StringBuilder();
+        sb.AppendLine("ID,NombreProyecto,CantidadTareas");
+
+        foreach (var project in projects)
+        {
+            sb.AppendLine($"{project.Id},\"{project.Name}\",{project.Tasks.Count}");
+        }
+
+        return sb.ToString();
+    }
+
+    public async Task<string> GenerateUserCsvAsync()
+    {
+        var users = await _context.Users
+            .Where(u => u.IsActive)
+            .Include(u => u.AssignedTasks)
+            .ToListAsync();
+
+        var sb = new StringBuilder();
+        sb.AppendLine("ID,NombreUsuario,TareasAsignadas");
+
+        foreach (var user in users)
+        {
+            sb.AppendLine($"{user.Id},\"{user.Username}\",{user.AssignedTasks.Count}");
         }
 
         return sb.ToString();
