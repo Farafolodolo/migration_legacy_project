@@ -81,7 +81,7 @@ public class TaskService : ITaskService
         existingTask.Description = updatedTask.Description;
         existingTask.Status = updatedTask.Status;
         existingTask.Priority = updatedTask.Priority;
-        existingTask.DueDate = updatedTask.DueDate;
+        existingTask.DueDate = updatedTask.DueDate.Value.ToUniversalTime();
         existingTask.EstimatedHours = updatedTask.EstimatedHours;
         existingTask.ProjectId = updatedTask.ProjectId;
         existingTask.AssignedToUserId = updatedTask.AssignedToUserId;
