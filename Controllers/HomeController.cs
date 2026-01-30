@@ -8,6 +8,8 @@ public class HomeController : Controller
 {
     public IActionResult Index()
     {
+        // Placeholder for user name until Identity is fully hooked up
+        ViewBag.CurrentUsername = User.Identity?.IsAuthenticated == true ? User.Identity.Name : "Usuario";
         return View();
     }
 
