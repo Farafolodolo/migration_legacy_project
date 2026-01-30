@@ -27,9 +27,10 @@ public class RegisterViewModel
     public string Email { get; set; } = string.Empty;
     
     [Required(ErrorMessage = "La contraseña es requerida")]
-    [StringLength(100, MinimumLength = 4, ErrorMessage = "La contraseña debe tener al menos 4 caracteres")]
     [DataType(DataType.Password)]
     [Display(Name = "Contraseña")]
+    [StringLength(100, MinimumLength = 8, ErrorMessage = "La contraseña debe tener al menos 8 caracteres")]
+    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$", ErrorMessage = "La contraseña debe contener al menos una mayúscula, una minúscula y un número.")]
     public string Password { get; set; } = string.Empty;
     
     [Required(ErrorMessage = "Confirma tu contraseña")]
