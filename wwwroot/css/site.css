@@ -48,14 +48,69 @@ a:hover {
 }
 
 /* Navbar overrides */
-.navbar-dark {
-  background-color: #1e1b4b !important;
-  /* Darker indigo/slate */
-  background: linear-gradient(to right, #1e1b4b, #312e81);
+.navbar-floating {
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s ease;
 }
 
-.navbar-dark .navbar-brand {
-  color: white !important;
+.navbar-brand-modern {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+  color: var(--primary-color) !important;
+  position: relative;
+  padding-left: 2rem;
+}
+
+/* Pseudo-element for a simple logo icon */
+.navbar-brand-modern::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  border-radius: 6px;
+}
+
+/* Nav Link Animations */
+.nav-link-animated {
+  position: relative;
+  color: var(--text-muted);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: color 0.3s ease;
+}
+
+.nav-link-animated:hover,
+.nav-link-animated.active {
+  color: var(--primary-color);
+}
+
+.nav-link-animated::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: var(--primary-color);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-50%);
+  opacity: 0;
+}
+
+.nav-link-animated:hover::after,
+.nav-link-animated.active::after {
+  width: 80%;
+  opacity: 1;
 }
 
 /* Navigation Tabs */

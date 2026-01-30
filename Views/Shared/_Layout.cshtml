@@ -16,61 +16,71 @@
 </head>
 <body>
     <div class="d-flex flex-column min-vh-100">
-        <header>
-            @if (ViewBag.CurrentUsername != null)
-            {
-                <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-                    <div class="container-fluid px-4">
-                        <span class="navbar-brand fw-bold font-poppins">Task Manager</span>
-                        <div class="d-flex align-items-center">
-                            <span class="text-white-50 me-3 small">@ViewBag.CurrentUsername</span>
-                            <a href="@Url.Action("Logout", "Account")" class="btn btn-sm btn-outline-light rounded-pill px-3">Salir</a>
-                        </div>
-                    </div>
-                </nav>
-                <div class="bg-white border-bottom shadow-sm">
-                    <div class="container-fluid px-4">
-                        <ul class="nav nav-tabs border-0" id="mainNav">
-                            <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Tasks" ? "active" : "")" 
-                                   asp-controller="Tasks" asp-action="Index">Tareas</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Projects" ? "active" : "")" 
-                                   asp-controller="Projects" asp-action="Index">Proyectos</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Comments" ? "active" : "")" 
-                                   asp-controller="Comments" asp-action="Index">Comentarios</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "History" ? "active" : "")" 
-                                   asp-controller="History" asp-action="Index">Historial</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Notifications" ? "active" : "")" 
-                                   asp-controller="Notifications" asp-action="Index">Notificaciones</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Search" ? "active" : "")" 
-                                   asp-controller="Search" asp-action="Index">Búsqueda</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Reports" ? "active" : "")" 
-                                   asp-controller="Reports" asp-action="Index">Reportes</a>
-                            </li>
-                        </ul>
+        <header class="sticky-top">
+            <nav class="navbar navbar-expand-lg navbar-floating navbar-light">
+                <div class="container-fluid px-4">
+                    <a class="navbar-brand navbar-brand-modern" href="/">Migración Legacy</a>
+                    
+                    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarContent">
+                        @if (ViewBag.CurrentUsername != null)
+                        {
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-2">
+                                <li class="nav-item">
+                                    <a class="nav-link nav-link-animated @(ViewContext.RouteData.Values["controller"]?.ToString() == "Tasks" ? "active" : "")" 
+                                       asp-controller="Tasks" asp-action="Index">Tareas</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link nav-link-animated @(ViewContext.RouteData.Values["controller"]?.ToString() == "Projects" ? "active" : "")" 
+                                       asp-controller="Projects" asp-action="Index">Proyectos</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link nav-link-animated @(ViewContext.RouteData.Values["controller"]?.ToString() == "Comments" ? "active" : "")" 
+                                       asp-controller="Comments" asp-action="Index">Comentarios</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link nav-link-animated @(ViewContext.RouteData.Values["controller"]?.ToString() == "History" ? "active" : "")" 
+                                       asp-controller="History" asp-action="Index">Historial</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link nav-link-animated @(ViewContext.RouteData.Values["controller"]?.ToString() == "Notifications" ? "active" : "")" 
+                                       asp-controller="Notifications" asp-action="Index">Notificaciones</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link nav-link-animated @(ViewContext.RouteData.Values["controller"]?.ToString() == "Search" ? "active" : "")" 
+                                       asp-controller="Search" asp-action="Index">Búsqueda</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link nav-link-animated @(ViewContext.RouteData.Values["controller"]?.ToString() == "Reports" ? "active" : "")" 
+                                       asp-controller="Reports" asp-action="Index">Reportes</a>
+                                </li>
+                            </ul>
+                            
+                            <div class="d-flex align-items-center gap-3 ms-lg-4">
+                                <div class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-dark fw-bold" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        👋 @ViewBag.CurrentUsername
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="userDropdown" style="border-radius: 12px;">
+                                        <li><span class="dropdown-header text-muted text-uppercase small" style="font-size: 0.7rem;">Cuenta</span></li>
+                                        <li><a class="dropdown-item" href="#">Perfil</a></li>
+                                        <li><a class="dropdown-item" href="#">Configuración</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a href="@Url.Action("Logout", "Account")" class="dropdown-item text-danger d-flex align-items-center gap-2">
+                                                <span>Cerrar Sesión</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
-            }
-            else
-            {
-                <nav class="navbar navbar-dark bg-dark mb-4">
-                    <div class="container-fluid justify-content-center">
-                        <span class="navbar-brand mb-0 h1 font-poppins">Task Manager</span>
-                    </div>
-                </nav>
-            }
+            </nav>
         </header>
 
         <main class="flex-grow-1">
