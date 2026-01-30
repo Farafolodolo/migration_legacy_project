@@ -56,7 +56,7 @@ public class NotificationService : INotificationService
         var notification = new Notification
         {
             UserId = userId,
-            Message = message,
+            Message = message ?? "",
             TaskItemId = taskId,
             IsRead = false,
             CreatedAt = DateTime.UtcNow
